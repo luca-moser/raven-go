@@ -1,5 +1,6 @@
 *.test
 example/example
+.idea/
 
 docs/_build
 docs/doctrees

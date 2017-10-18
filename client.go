@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"compress/zlib"
 	"crypto/rand"
-	"crypto/tls"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
@@ -13,7 +12,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -22,8 +20,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-
-	"github.com/certifi/gocertifi"
 )
 
 const (
@@ -311,16 +307,10 @@ var MaxQueueBuffer = 100
 
 func newTransport() Transport {
 	t := &HTTPTransport{}
-	rootCAs, err := gocertifi.CACerts()
-	if err != nil {
-		log.Println("raven: failed to load root TLS certificates:", err)
-	} else {
-		t.Client = &http.Client{
-			Transport: &http.Transport{
-				Proxy: http.ProxyFromEnvironment,
-				TLSClientConfig: &tls.Config{RootCAs: rootCAs},
-			},
-		}
+	t.Client = &http.Client{
+		Transport: &http.Transport{
+			Proxy: http.ProxyFromEnvironment,
+		},
 	}
 	return t
 }
